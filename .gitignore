@@ -1,0 +1,6 @@
+.env
+.idea/
+data/logs/
+__pycache__/
+data/crawls/
+**/__pycache__/
