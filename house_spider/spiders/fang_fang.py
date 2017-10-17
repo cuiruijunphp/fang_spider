@@ -17,7 +17,7 @@ class FangFangSpider(scrapy.Spider):
     new_house_url = 'http://newhouse.sz.fang.com/'
 
     custom_settings = {
-        'DOWNLOAD_DELAY': 2,
+        'DOWNLOAD_DELAY': 3,
         'CONCURRENT_REQUESTS': 20,
         'COOKIES_ENABLED': False,
         'ITEM_PIPELINES': {
@@ -28,7 +28,7 @@ class FangFangSpider(scrapy.Spider):
 
     def parse(self,response):
         print('1111111111111111')
-        sql = 'select * from fang_city limit 13,2'
+        sql = 'select * from fang_city limit 6,30'
         data = DB.connect().fetch_all(sql)
 
         if not data:
@@ -40,10 +40,12 @@ class FangFangSpider(scrapy.Spider):
             self.city_id = row['id']
             self.new_house_url = row['new_house_url']
             # req = self.make_requests_from_url(row['new_house_url'])
-            yield scrapy.Request(row['new_house_url'],callback=self.parse_url,meta={'city_id':row['id'],'new_house_url':row['new_house_url'],'city_name':row['name']})
+            url = row['new_house_url']
+            yield scrapy.Request(url,callback=self.parse_url,meta={'city_id':row['id'],'new_house_url':row['new_house_url'],'city_name':row['name']})
 
     def parse_url(self, response):
         meta = response.meta
+        print(meta)
         # 取页码
         # total_page_tmp = response.xpath('//div[@class="otherpage"]/span[last()]/text()').extract_first()
         total_page_tmp = response.xpath('//li[@class="fr"]/a[@class="last"]/@href').extract_first()
@@ -58,7 +60,7 @@ class FangFangSpider(scrapy.Spider):
         max_total_page = int(total_page) + 1
 
         for i in range(1, max_total_page):
-            request_url = self.new_house_url + "house/s/b9" + str(i)
+            request_url = response.meta['new_house_url'] + "house/s/b9" + str(i)
             yield scrapy.Request(request_url, callback=self.parse_list,meta=meta)
 
     def parse_list(self, response):
