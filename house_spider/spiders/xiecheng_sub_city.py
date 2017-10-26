@@ -37,16 +37,18 @@ class XiechengSubCitySpider(scrapy.Spider):
                 print(row)
                 # self.city_name = row['name']
                 # self.city_id = row['city_id']
-                url = 'http://hotels.ctrip.com/Domestic/Tool/AjaxGetHotKeyword.aspx?cityid='+str(row['city_id'])
+                url = 'http://hotels.ctrip.com/Domestic/Tool/AjaxGetHotKeyword.aspx?cityid=' + str(row['city_id'])
                 print(url)
-                yield scrapy.Request(url, callback=self.parse_detail,meta={'city_id':row['city_id'],'city_name':row['name'],'short_name':row['short_name']})
+                yield scrapy.Request(url, callback=self.parse_detail,
+                                     meta={'city_id': row['city_id'], 'city_name': row['name'],
+                                           'short_name': row['short_name']})
 
     def parse_detail(self, response):
         print(response.body_as_unicode())
         if response.body_as_unicode():
             pos = response.body_as_unicode().find('cQuery.jsonpResponse.suggestion')
 
-            if pos > -1 :
+            if pos > -1:
                 res_json = response.body_as_unicode()[pos:].lstrip("cQuery.jsonpResponse.suggestion=")
                 result_list = json.loads(res_json)
                 item = XiechengCityItem()
@@ -64,4 +66,3 @@ class XiechengSubCitySpider(scrapy.Spider):
                         item['create_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
                         yield item
-

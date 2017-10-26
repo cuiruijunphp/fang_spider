@@ -24,7 +24,7 @@ class XiechengSubSqSpider(scrapy.Spider):
         }
     }
 
-    def parse(self,response):
+    def parse(self, response):
         sql = 'select * from xiecheng_city limit 350,1650'
         data = DB.connect().fetch_all(sql)
 
@@ -36,8 +36,10 @@ class XiechengSubSqSpider(scrapy.Spider):
             if row['city_id']:
                 self.city_name = row['name']
                 self.city_id = row['city_id']
-                url = 'http://hotels.ctrip.com/domestic/tool/AjaxCityZoneNew.aspx?city='+str(row['sub_city_id'])
-                yield scrapy.Request(url, callback=self.parse_detail,meta={'city_id':row['city_id'],'city_name':row['name'],'sub_city_name':row['sub_city_name']})
+                url = 'http://hotels.ctrip.com/domestic/tool/AjaxCityZoneNew.aspx?city=' + str(row['sub_city_id'])
+                yield scrapy.Request(url, callback=self.parse_detail,
+                                     meta={'city_id': row['city_id'], 'city_name': row['name'],
+                                           'sub_city_name': row['sub_city_name']})
 
     def parse_detail(self, response):
 
@@ -52,7 +54,7 @@ class XiechengSubSqSpider(scrapy.Spider):
             res_keys = keys_temp.split(',')
             print('11111111111111')
             print(res_keys)
-            res_list =[]
+            res_list = []
             for i in range(len(res_keys)):
                 res_list += result_list[res_keys[i]]
             # res_list = result_list['ABCDE'] + result_list['FGHJK'] + result_list['LMNOP'] + result_list['QRSTW'] + result_list['XYZ']

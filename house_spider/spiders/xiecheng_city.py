@@ -21,22 +21,29 @@ class XiechengCitySpider(scrapy.Spider):
     def parse(self, response):
         res_json = response.body_as_unicode()
         pos = res_json.find('cQuery.jsonpResponse.suggestion')
-        if pos > -1 :
+        if pos > -1:
             res_json = res_json[pos:].lstrip("cQuery.jsonpResponse.suggestion=")
             # res_json = res_json.replace("'",'\"')
             # print(res_json)
-            res_json_1 = res_json.replace("热门",'\"热门\"').replace("ABCD",'\"ABCD\"').replace("EFGH",'\"EFGH\"').replace("JKLM",'\"JKLM\"').replace("NOPQRS",'\"NOPQRS\"').replace("TUVWX",'\"TUVWX\"').replace("YZ",'\"YZ\"').replace("display",'\"display\"').replace("data",'\"data\"').replace("group",'\"group\"').replace("\n", "").replace("\r", "").replace('\r\n','').replace(' ','').replace('\t','')
+            res_json_1 = res_json.replace("热门", '\"热门\"').replace("ABCD", '\"ABCD\"').replace("EFGH",
+                                                                                              '\"EFGH\"').replace(
+                "JKLM", '\"JKLM\"').replace("NOPQRS", '\"NOPQRS\"').replace("TUVWX", '\"TUVWX\"').replace("YZ",
+                                                                                                          '\"YZ\"').replace(
+                "display", '\"display\"').replace("data", '\"data\"').replace("group", '\"group\"').replace("\n",
+                                                                                                            "").replace(
+                "\r", "").replace('\r\n', '').replace(' ', '').replace('\t', '')
             # res_json = res_json.replace("ABCD",'\"ABCD\"')
             # res_json = res_json.replace("display",'\"display\"')
             # res_json = res_json.replace("data",'\"data\"')
             # res_json = res_json.replace("group",'\"group\"')
             print(res_json_1)
-            with open('1.html','a+') as f:
+            with open('1.html', 'a+') as f:
                 f.write(res_json_1)
 
         result_list = json.loads(res_json_1)
         print(result_list)
-        city_list = result_list['ABCD'] + result_list['EFGH'] + result_list['JKLM'] + result_list['NOPQRS'] + result_list['TUVWX'] + result_list['YZ']
+        city_list = result_list['ABCD'] + result_list['EFGH'] + result_list['JKLM'] + result_list['NOPQRS'] + \
+                    result_list['TUVWX'] + result_list['YZ']
         item = XiechengCityItem()
 
         for single_city in city_list:

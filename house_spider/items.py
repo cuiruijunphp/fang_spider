@@ -87,3 +87,13 @@ class XiechengSqItem(scrapy.Item):
     path = scrapy.Field()
     sub_city_name = scrapy.Field()
 
+class CleanHouseResItem(scrapy.Item):
+    name = scrapy.Field()
+    address = scrapy.Field()
+    lng = scrapy.Field()
+    lat = scrapy.Field()
+    city_name = scrapy.Field()
+    proj_desc = scrapy.Field()
+    is_second_house = scrapy.Field()
+    create_time = scrapy.Field()
+

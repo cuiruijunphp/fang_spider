@@ -59,3 +59,13 @@ class XiechengCitySpiderPipeline(object):
             return item
         else:
             raise DropItem('item由于不完整被丢弃')
+
+class CleanHouseResSpiderPipeline(object):
+    @staticmethod
+    def process_item(item, spider):
+        if item['name']:
+            DB.connect().insert('house_res', item)
+            return item
+        else:
+            raise DropItem('item由于不完整被丢弃')
+

@@ -61,7 +61,7 @@ class FangFangSpider(scrapy.Spider):
             detail_url = response.css('div[class="fn-line"] a::attr(href)').extract_first()
 
         if not detail_url:
-            with open("1.html",'a') as f:
+            with open("1.html", 'a') as f:
                 f.write(response.url)
         yield scrapy.Request(detail_url, callback=self.parse_detail)
 
@@ -78,18 +78,24 @@ class FangFangSpider(scrapy.Spider):
 
         item_list = response.xpath('//ul[@class="list clearfix"]/li')
 
-        #建筑类别
-        item['construct_type'] = response.css('.main-item ul li:nth-child(3) div[class="list-right"] span::text').extract_first()
-        #装修状况
-        item['decoration_status'] = response.css('.main-item ul li:nth-child(4) div[class="list-right"]::text').extract_first()
-        #产权年限
-        item['right_years'] = response.css('.main-item ul li:nth-child(5) div[class="list-right"] p::text').extract_first()
-        #环线位置
-        item['loop_position'] = response.css('.main-item ul li:nth-child(6) div[class="list-right"]::text').extract_first()
-        #开发商
-        item['developers'] = response.css('.main-item ul li:nth-child(7) div[class="list-right-text"] a::text').extract_first()
-        #楼盘地址
-        item['build_address'] = response.css('.main-item ul li:nth-child(3) div[class="list-right"]::text').extract_first()
+        # 建筑类别
+        item['construct_type'] = response.css(
+            '.main-item ul li:nth-child(3) div[class="list-right"] span::text').extract_first()
+        # 装修状况
+        item['decoration_status'] = response.css(
+            '.main-item ul li:nth-child(4) div[class="list-right"]::text').extract_first()
+        # 产权年限
+        item['right_years'] = response.css(
+            '.main-item ul li:nth-child(5) div[class="list-right"] p::text').extract_first()
+        # 环线位置
+        item['loop_position'] = response.css(
+            '.main-item ul li:nth-child(6) div[class="list-right"]::text').extract_first()
+        # 开发商
+        item['developers'] = response.css(
+            '.main-item ul li:nth-child(7) div[class="list-right-text"] a::text').extract_first()
+        # 楼盘地址
+        item['build_address'] = response.css(
+            '.main-item ul li:nth-child(3) div[class="list-right"]::text').extract_first()
 
         for item_single in item_list:
             item_content = item_single.xpath('div[@class="list-left"]/text()').extract_first()
@@ -128,8 +134,6 @@ class FangFangSpider(scrapy.Spider):
 
             if item_content == '主力户型：':
                 item['main_unit_type'] = item_single.xpath('div[@class="list-right-text"]/a/text()').extract_first()
-
-
 
         area_list = response.xpath('//ul[@class="clearfix list"]/li')
         for item_single in area_list:
@@ -180,11 +184,11 @@ class FangFangSpider(scrapy.Spider):
             if v is None:
                 res_item[k] = ''
             else:
-                res_item[k] = v.strip().replace("\n", "").replace("\r", "").replace('\xa0', '').replace("\r\n","")
+                res_item[k] = v.strip().replace("\n", "").replace("\r", "").replace('\xa0', '').replace("\r\n", "")
 
         res_item['city_name'] = self.city_name
         res_item['city_id'] = self.city_id
         house_type_url_list = response.url.split('/')
-        res_item['house_type_url_id'] = house_type_url_list[len(house_type_url_list)-2]
+        res_item['house_type_url_id'] = house_type_url_list[len(house_type_url_list) - 2]
 
         yield res_item
